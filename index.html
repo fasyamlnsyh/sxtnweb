@@ -1,339 +1,854 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>SXTN Studio</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SXTN Studio™</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Karla:wght@400;500&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    :root {
+      --bg: #06060a;
+      --fg: #edede8;
+      --accent: #556Aff;
+      --border: rgba(237, 237, 232, 0.08);
+    }
 
-<style>
-/* ================= THEME ================= */
-:root{
-  --bg1:#e8f5f2;
-  --bg2:#eef3ff;
-  --bg3:#ffffff;
-  --text:#0e1b1a;
-  --muted:#5f6f73;
-  --accent:#1fb6a6;
-  --marquee-speed:18s;
-}
-body.edgy{
-  --bg1:#020617;
-  --bg2:#0f172a;
-  --bg3:#000000;
-  --text:#e5e7eb;
-  --muted:#9ca3af;
-  --accent:#22d3ee;
-  --marquee-speed:10s;
-}
+    html {
+      scroll-behavior: smooth;
+    }
 
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Inter,sans-serif;
-  background:linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
-  color:var(--text);
-  transition:.8s;
-  overflow-x:hidden;
-}
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Karla', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
 
-/* ================= BACKGROUND ANIMATION ================= */
-.spray{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:0;
-}
-.spray::before{
-  content:"";
-  position:absolute;
-  width:520px;
-  height:520px;
-  background:radial-gradient(circle,var(--accent),transparent 60%);
-  filter:blur(60px);
-  opacity:.18;
-  animation:sprayMove 22s alternate infinite ease-in-out;
-}
-@keyframes sprayMove{
-  from{transform:translate(-20%,-10%)}
-  to{transform:translate(30%,30%)}
-}
+    ::-webkit-scrollbar {
+      display: none;
+    }
 
-/* ================= MODE BUTTON ================= */
-.mode-btn{
-  position:fixed;
-  top:20px;
-  right:20px;
-  padding:10px 14px;
-  border-radius:30px;
-  backdrop-filter:blur(10px);
-  cursor:pointer;
-  z-index:99;
-}
+    * {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
 
-/* ================= HERO ================= */
-.hero{
-  min-height:100vh;
-  padding:90px 40px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  position:relative;
-  z-index:1;
-}
-.hero h1{
-  font-size:clamp(3.2rem,8vw,6.2rem);
-  letter-spacing:7px;
-  cursor:pointer;
-}
-.hero p{
-  max-width:520px;
-  color:var(--muted);
-}
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
 
-/* ================= MARQUEE ================= */
-.marquee{
-  position:relative;
-  z-index:1;
-  overflow:hidden;
-  white-space:nowrap;
-  border-top:1px solid #cfe3df;
-  border-bottom:1px solid #cfe3df;
-  background:rgba(255,255,255,.7);
-  backdrop-filter:blur(6px);
-}
-body.edgy .marquee{
-  background:#000;
-  border-color:#222;
-}
-.marquee-track{
-  display:inline-block;
-  animation:scroll var(--marquee-speed) linear infinite;
-}
-.marquee:hover .marquee-track{
-  animation-play-state:paused; /* easter egg kecil */
-}
-.marquee span{
-  padding:18px 40px;
-  letter-spacing:4px;
-  font-size:.95rem;
-}
-@keyframes scroll{
-  from{transform:translateX(0)}
-  to{transform:translateX(-50%)}
-}
+    img {
+      display: block;
+      max-width: 100%;
+    }
 
-/* ================= SECTION ================= */
-section{
-  padding:110px 40px;
-  max-width:1200px;
-  margin:auto;
-  position:relative;
-  z-index:1;
-}
+    @keyframes ticker {
+      from {
+        transform: translateX(0);
+      }
 
-/* ================= WORKS ================= */
-.works{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:26px;
-}
-.works img{
-  width:100%;
-  border-radius:18px;
-  cursor:pointer;
-  transition:.6s cubic-bezier(.19,1,.22,1);
-}
-.works img:hover{transform:scale(1.04)}
+      to {
+        transform: translateX(-50%);
+      }
+    }
 
-/* ================= LIGHTBOX ================= */
-.lightbox{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.9);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:999;
-}
-.lightbox img{
-  max-width:92%;
-  max-height:92%;
-  border-radius:16px;
-}
-.lightbox.show{display:flex}
+    @keyframes tickerRev {
+      from {
+        transform: translateX(-50%);
+      }
 
-/* ================= CONTACT ================= */
-.contact{text-align:center}
-.contact a{
-  display:block;
-  margin-top:16px;
-  font-size:1.2rem;
-  color:var(--accent);
-  text-decoration:none;
-}
+      to {
+        transform: translateX(0);
+      }
+    }
 
-/* ================= EASTER EGG ================= */
-.easter{
-  position:fixed;
-  bottom:30px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#000;
-  color:#fff;
-  padding:14px 22px;
-  border-radius:30px;
-  font-size:.9rem;
-  letter-spacing:.5px;
-  opacity:0;
-  pointer-events:none;
-  transition:.6s ease;
-  z-index:1000;
-}
-.easter.show{opacity:1}
+    @keyframes blink {
 
-@media(max-width:600px){
-  .hero{padding:70px 24px}
-  section{padding:90px 24px}
-}
-</style>
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .tick {
+      animation: ticker 30s linear infinite;
+    }
+
+    .tick-rev {
+      animation: tickerRev 30s linear infinite;
+    }
+
+    .blink {
+      animation: blink 1.1s step-end infinite;
+    }
+
+    .fade-up {
+      animation: fadeUp .9s ease forwards;
+    }
+
+    .fade-up-d1 {
+      animation: fadeUp .9s .18s ease both;
+    }
+
+    .fade-up-d2 {
+      animation: fadeUp .9s .34s ease both;
+    }
+
+    #nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid transparent;
+      transition: background .3s, border-color .3s, backdrop-filter .3s;
+    }
+
+    #nav.scrolled {
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(14px);
+      background: rgba(6, 6, 10, .88);
+    }
+
+    .nav-logo {
+      height: 48px;
+      width: auto;
+      object-fit: contain;
+      mix-blend-mode: screen;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      opacity: .4;
+      transition: opacity .15s;
+    }
+
+    .nav-links a:hover {
+      opacity: 1;
+    }
+
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 6rem 2rem 3.5rem;
+      position: relative;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-tag {
+      position: absolute;
+      top: 5rem;
+      right: 2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      opacity: .28;
+    }
+
+    .hero-h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: .82;
+      font-size: clamp(5.5rem, 19vw, 19rem);
+    }
+
+    .hero-sub {
+      margin-top: 2.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 1.5rem 4rem;
+    }
+
+    .hero-desc {
+      max-width: 20rem;
+      font-size: .875rem;
+      line-height: 1.7;
+      opacity: .5;
+    }
+
+    .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      padding: .85rem 1.25rem;
+      border: 1px solid var(--border);
+      transition: background .2s, color .2s, border-color .2s;
+    }
+
+    .hero-btn:hover {
+      background: var(--fg);
+      color: var(--bg);
+      border-color: var(--fg);
+    }
+
+    .hero-btn svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .scroll-cue {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      opacity: .22;
+    }
+
+    .marquee-wrap {
+      overflow: hidden;
+    }
+
+    .marquee-row {
+      display: flex;
+      white-space: nowrap;
+    }
+
+    .marquee-row span {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .marquee-yellow {
+      background: var(--accent);
+      padding: .75rem 0;
+    }
+
+    .marquee-yellow .marquee-row span {
+      color: var(--bg);
+      font-weight: 700;
+    }
+
+    .marquee-dark {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: .6rem 0;
+    }
+
+    .marquee-dark .marquee-row span {
+      color: rgba(237, 237, 232, .2);
+    }
+
+    .section {
+      padding: 6rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.25rem;
+      margin-bottom: 3rem;
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      opacity: .35;
+    }
+
+    .section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: 1;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+    }
+
+    .about-grid {
+      display: grid;
+      gap: 3rem 5rem;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 768px) {
+      .about-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .about-pull {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      line-height: 1.15;
+      font-size: clamp(1.6rem, 3vw, 2.75rem);
+      margin-bottom: 2rem;
+    }
+
+    .about-body {
+      font-size: .875rem;
+      line-height: 1.75;
+      opacity: .55;
+      margin-bottom: 1.25rem;
+      text-align: justify;
+    }
+
+    .about-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-top: .5rem;
+    }
+
+    .about-link svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid var(--border);
+    }
+
+    .stat-cell {
+      padding: 1.75rem;
+    }
+
+    .stat-cell:nth-child(1),
+    .stat-cell:nth-child(3) {
+      border-right: 1px solid var(--border);
+    }
+
+    .stat-cell:nth-child(1),
+    .stat-cell:nth-child(2) {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stat-n {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      line-height: 1;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      color: var(--accent);
+      margin-bottom: .5rem;
+    }
+
+    .stat-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      opacity: .38;
+    }
+
+    .works-slider {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      gap: 1rem;
+      padding-bottom: 2rem;
+    }
+    .works-slider::-webkit-scrollbar {
+      display: none;
+    }
+
+    .work-thumb {
+      flex: 0 0 85vw;
+      aspect-ratio: 4/5;
+      position: relative;
+      overflow: hidden;
+      background: #0d0d0d;
+      cursor: pointer;
+      transition: transform .35s ease;
+      scroll-snap-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .work-thumb {
+        flex: 0 0 22vw;
+      }
+    }
+
+    .work-thumb:hover {
+      transform: scale(1.02);
+      z-index: 2;
+    }
+
+    .work-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.3s;
+    }
+
+    .work-thumb:hover img {
+      opacity: 0.8;
+    }
+
+    .popup-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(6,6,10, 0.95);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+    .popup-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .popup-content {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      animation: popupScale 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    .popup-overlay.active .popup-content {
+      transform: scale(1);
+      opacity: 1;
+    }
+    @keyframes popupScale {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .popup-content img {
+      max-width: 100%;
+      max-height: 90vh;
+      object-fit: contain;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    .popup-info {
+      position: absolute;
+      bottom: -1rem;
+      left: -1rem;
+      background: var(--bg);
+      color: var(--fg);
+      border: 1px solid var(--border);
+      padding: 1rem 1.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    .popup-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      text-transform: uppercase;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .popup-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-top: 0.5rem;
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .popup-close {
+      position: absolute;
+      top: -1rem;
+      right: -1rem;
+      background: var(--fg);
+      color: var(--bg);
+      border: none;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .popup-close:hover {
+      transform: scale(1.1);
+    }
+
+    .works-count {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .works-count span {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      opacity: .22;
+    }
+
+    .contact-grid {
+      display: grid;
+      gap: 4rem;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 768px) {
+      .contact-grid {
+        grid-template-columns: 1fr 1fr;
+        align-items: flex-end;
+      }
+    }
+
+    .contact-h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: .85;
+      font-size: clamp(4rem, 11vw, 11rem);
+    }
+
+    .contact-h2 span {
+      color: var(--accent);
+    }
+
+    .contact-desc {
+      font-size: .875rem;
+      line-height: 1.75;
+      opacity: .55;
+      max-width: 20rem;
+      margin-bottom: 2rem;
+    }
+
+    .contact-links {
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 0;
+      font-size: .875rem;
+      border-bottom: 1px solid var(--border);
+      transition: color .15s;
+    }
+
+    .contact-link:hover {
+      color: var(--accent);
+    }
+
+    .contact-link-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      opacity: .38;
+      width: 2rem;
+    }
+
+    .contact-link-label {
+      flex: 1;
+    }
+
+    .contact-link svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      opacity: 0;
+      transition: opacity .15s;
+    }
+
+    .contact-link:hover svg {
+      opacity: 1;
+    }
+
+    footer {
+      padding: 1.5rem 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: .75rem;
+    }
+
+    .footer-logo {
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+      mix-blend-mode: screen;
+      opacity: .35;
+    }
+
+    .footer-copy {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      opacity: .2;
+    }
+
+    @media (max-width: 600px) {
+      #nav {
+        padding: .875rem 1.25rem;
+      }
+
+      .nav-links {
+        gap: 1.5rem;
+      }
+
+      #hero {
+        padding: 5.5rem 1.25rem 3rem;
+      }
+
+      .section {
+        padding: 4rem 1.25rem;
+      }
+
+      footer {
+        padding: 1.25rem;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="spray"></div>
+  <nav id="nav">
+    <img src="logomark.jpeg" alt="sxtnstudio" class="nav-logo" />
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#works">Works</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
 
-<div class="mode-btn" onclick="toggleMode()">🎨 MODE</div>
+  <section id="hero">
+    <span class="hero-tag">Jakarta, Indonesia</span>
+    <h1 class="fade-up" style="margin: 0 0 6rem 0;"><img src="logotype.jpeg" alt="SXTN STUDIO" style="width: 100%; max-width: 750px; mix-blend-mode: screen;" /></h1>
+    <div class="hero-sub fade-up-d1">
+      <p class="hero-desc">Experimental type and graphic design studio. Visual identity, typography, branding, and
+        creative direction.</p>
+      <a href="#works" class="hero-btn">
+        View Work
+        <svg viewBox="0 0 24 24">
+          <line x1="7" y1="17" x2="17" y2="7" />
+          <polyline points="7 7 17 7 17 17" />
+        </svg>
+      </a>
+    </div>
+    <div class="scroll-cue fade-up-d2">scroll<span class="blink">_</span></div>
+  </section>
 
-<!-- AUDIO -->
-<audio id="soft" src="beat-soft.mp3" loop></audio>
-<audio id="edgy" src="beat-edgy.mp3" loop></audio>
-
-<!-- HERO -->
-<div class="hero">
-  <h1 id="logo">SXTN STUDIO</h1>
-  <p>Experimental graphic design studio exploring typography, identity, and visual attitude.</p>
-</div>
-
-<!-- MARQUEE -->
-<div class="marquee">
-  <div class="marquee-track" id="marqueeText">
-    <span>TYPOGRAPHY — VISUAL IDENTITY — EXPERIMENTAL DESIGN — SXTN STUDIO —</span>
-    <span>TYPOGRAPHY — VISUAL IDENTITY — EXPERIMENTAL DESIGN — SXTN STUDIO —</span>
+  <div class="marquee-wrap marquee-yellow">
+    <div class="marquee-row tick">
+      <span>- SXTN STUDIO - EXPERIMENTAL TYPE & GRAPHIC DESIGN STUDIO - - SXTN STUDIO - EXPERIMENTAL TYPE & GRAPHIC DESIGN STUDIO - &nbsp;</span>
+      <span>- SXTN STUDIO - EXPERIMENTAL TYPE & GRAPHIC DESIGN STUDIO - - SXTN STUDIO - EXPERIMENTAL TYPE & GRAPHIC DESIGN STUDIO - &nbsp;</span>
+    </div>
   </div>
-</div>
-
-<!-- ABOUT -->
-<section>
-  <h2>About</h2>
-  <p style="max-width:650px;color:var(--muted);line-height:1.7;">
-    SXTN Studio focuses on expressive visual systems, blending structure with intuition and emotional clarity.
-  </p>
-</section>
-
-<!-- WORKS -->
-<section>
-  <h2>Selected Works</h2>
-  <div class="works">
-    <img src="IMG_5207.JPG">
-    <img src="IMG_5208.JPG">
-    <img src="IMG_5209.JPG">
-    <img src="IMG_5210.JPG">
-    <img src="IMG_5211.JPG">
+  <div class="marquee-wrap marquee-dark">
+    <div class="marquee-row tick-rev">
+      <span>- SXTN STUDIO - EXPERIMENTAL TYPE & GRAPHIC DESIGN STUDIO - - SXTN STUDIO - EXPERIMENTAL TYPE & GRAPHIC DESIGN STUDIO - &nbsp;</span>
+      <span>- SXTN STUDIO - EXPERIMENTAL TYPE & GRAPHIC DESIGN STUDIO - - SXTN STUDIO - EXPERIMENTAL TYPE & GRAPHIC DESIGN STUDIO - &nbsp;</span>
+    </div>
   </div>
-</section>
 
-<!-- CONTACT -->
-<section class="contact">
-  <h2>Contact</h2>
-  <a href="https://www.instagram.com/sxtnstudio_" target="_blank">DM on Instagram</a>
-  <a href="mailto:sxtndesign16@gmail.com">sxtndesign16@gmail.com</a>
-</section>
+  <section class="section" id="about">
+    <div class="section-header"><span class="section-label">About</span></div>
+    <div class="about-grid">
+      <div>
+        <p class="about-pull">Visual systems rooted in clear concepts and thoughtful execution.</p>
+        <p class="about-body">Sxtn Studio™ is an experimental type and graphic design studio based in Jakarta,
+          Indonesia. We work across visual identity, typography, branding, packaging, and creative direction, developing
+          visual systems that are rooted in clear concepts and thoughtful execution. Every project starts with
+          understanding the purpose behind the work, allowing each outcome to have its own character while remaining
+          relevant to the people it is made for.</p>
+        <p class="about-body">Our practice combines research, experimentation, and craftsmanship throughout the design
+          process. We are interested in exploring typography, composition, and contemporary visual culture to create
+          work that feels distinctive without losing its function. By working closely with brands, businesses, and
+          creative individuals, we aim to build visual identities and design experiences that communicate with clarity
+          and leave a lasting impression.</p>
+        <a href="#contact" class="about-link">Get in touch <svg viewBox="0 0 24 24">
+            <line x1="7" y1="17" x2="17" y2="7" />
+            <polyline points="7 7 17 7 17 17" />
+          </svg></a>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-cell">
+          <div class="stat-n">100+</div>
+          <div class="stat-label">Projects</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-n">6</div>
+          <div class="stat-label">Years Active</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-n">50+</div>
+          <div class="stat-label">Clients</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-n">∞</div>
+          <div class="stat-label">Type Systems</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- LIGHTBOX -->
-<div class="lightbox" id="lb"><img id="lbImg"></div>
+  <section class="section" id="works">
+    <div class="section-header">
+      <span class="section-label">Selected Works</span>
+      <span class="section-title">Works</span>
+    </div>
 
-<!-- EASTER -->
-<div class="easter" id="easter"></div>
+    <div class="works-slider">
+      <div class="work-thumb" onclick="openPopup('1.jpeg', 'ARTWORK 01', 'Visual Identity / 2024')"><img src="1.jpeg" alt="ARTWORK 01" /></div>
+      <div class="work-thumb" onclick="openPopup('2.jpeg', 'ARTWORK 02', 'Experimental Type / 2024')"><img src="2.jpeg" alt="ARTWORK 02" /></div>
+      <div class="work-thumb" onclick="openPopup('3.jpeg', 'ARTWORK 03', 'Poster Design / 2024')"><img src="3.jpeg" alt="ARTWORK 03" /></div>
+      <div class="work-thumb" onclick="openPopup('4.jpeg', 'ARTWORK 04', 'Poster Design / 2024')"><img src="4.jpeg" alt="ARTWORK 04" /></div>
+      <div class="work-thumb" onclick="openPopup('5.jpeg', 'ARTWORK 05', 'Typography / 2024')"><img src="5.jpeg" alt="ARTWORK 05" /></div>
+      <div class="work-thumb" onclick="openPopup('6.jpeg', 'ARTWORK 06', 'Visual Identity / 2024')"><img src="6.jpeg" alt="ARTWORK 06" /></div>
+      <div class="work-thumb" onclick="openPopup('7.jpeg', 'ARTWORK 07', 'Experimental Type / 2024')"><img src="7.jpeg" alt="ARTWORK 07" /></div>
+      <div class="work-thumb" onclick="openPopup('8.jpeg', 'ARTWORK 08', 'Poster Design / 2024')"><img src="8.jpeg" alt="ARTWORK 08" /></div>
+      <div class="work-thumb" onclick="openPopup('9.jpeg', 'ARTWORK 09', 'Poster Design / 2024')"><img src="9.jpeg" alt="ARTWORK 09" /></div>
+      <div class="work-thumb" onclick="openPopup('10.jpeg', 'ARTWORK 10', 'Typography / 2024')"><img src="10.jpeg" alt="ARTWORK 10" /></div>
+      <div class="work-thumb" onclick="openPopup('11.jpeg', 'ARTWORK 11', 'Visual Identity / 2024')"><img src="11.jpeg" alt="ARTWORK 11" /></div>
+      <div class="work-thumb" onclick="openPopup('12.JPG', 'ARTWORK 12', 'Experimental Type / 2024')"><img src="12.JPG" alt="ARTWORK 12" /></div>
+      <div class="work-thumb" onclick="openPopup('13.JPG', 'ARTWORK 13', 'Poster Design / 2024')"><img src="13.JPG" alt="ARTWORK 13" /></div>
+      <div class="work-thumb" onclick="openPopup('14.JPG', 'ARTWORK 14', 'Poster Design / 2024')"><img src="14.JPG" alt="ARTWORK 14" /></div>
+      <div class="work-thumb" onclick="openPopup('15.JPG', 'ARTWORK 15', 'Typography / 2024')"><img src="15.JPG" alt="ARTWORK 15" /></div>
+      <div class="work-thumb" onclick="openPopup('16.JPG', 'ARTWORK 16', 'Creative Direction / 2024')"><img src="16.JPG" alt="ARTWORK 16" /></div>
+    </div>
 
-<script>
-/* ================= AUDIO ================= */
-const soft=document.getElementById('soft');
-const edgy=document.getElementById('edgy');
-soft.volume=0;edgy.volume=0;
-let started=false;
+    <div class="works-count"><span>16 projects shown</span></div>
+  </section>
 
-function fadeIn(a){
-  a.play();
-  let i=setInterval(()=>{if(a.volume<0.7)a.volume+=0.03;else clearInterval(i)},120);
-}
-function fadeOut(a){
-  let i=setInterval(()=>{
-    if(a.volume>0.03)a.volume-=0.03;
-    else{a.pause();a.volume=0;clearInterval(i)}
-  },120);
-}
+  <section class="section" id="contact">
+    <div class="section-header"><span class="section-label">Contact</span></div>
+    <div class="contact-grid">
+      <h2 class="contact-h2">LET'S<br /><span>WORK.</span></h2>
+      <div>
+        <p class="contact-desc">Available for poster design, brand identity, typography, packaging, and experimental
+          visual projects.</p>
+        <div class="contact-links">
+          <a href="https://www.instagram.com/sxtnstudio_?igsh=MTh6bjVpd3JqaXFxag==" target="_blank" rel="noopener noreferrer" class="contact-link"><span class="contact-link-tag">IG</span><span class="contact-link-label">DM
+              on Instagram</span><svg viewBox="0 0 24 24">
+              <line x1="7" y1="17" x2="17" y2="7" />
+              <polyline points="7 7 17 7 17 17" />
+            </svg></a>
+          <a href="mailto:sxtndesign16@gmail.com" class="contact-link"><span class="contact-link-tag">EM</span><span
+              class="contact-link-label">sxtndesign16@gmail.com</span><svg viewBox="0 0 24 24">
+              <line x1="7" y1="17" x2="17" y2="7" />
+              <polyline points="7 7 17 7 17 17" />
+            </svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-function startAudio(){
-  if(started)return;
-  fadeIn(soft);
-  started=true;
-}
-window.addEventListener('click',startAudio,{once:true});
-window.addEventListener('scroll',startAudio,{once:true});
+  <footer>
+    <img src="logomark.jpeg" alt="sxtnstudio" class="footer-logo" />
+    <span class="footer-copy" id="yr"></span>
+  </footer>
 
-/* ================= MODE SWITCH ================= */
-const marquee=document.getElementById('marqueeText');
+  <!-- Artwork Popup -->
+  <div id="artwork-popup" class="popup-overlay" onclick="closePopup()">
+    <div class="popup-content" onclick="event.stopPropagation()">
+      <img id="popup-img" src="" alt="" />
+      <div class="popup-info">
+        <div id="popup-title"></div>
+        <div id="popup-meta"></div>
+      </div>
+      <button class="popup-close" onclick="closePopup()">×</button>
+    </div>
+  </div>
 
-function toggleMode(){
-  document.body.classList.toggle('edgy');
-  if(document.body.classList.contains('edgy')){
-    marquee.innerHTML = `
-      <span>STREET ENERGY — RAW TYPE — VISUAL ATTITUDE — SXTN STUDIO —</span>
-      <span>STREET ENERGY — RAW TYPE — VISUAL ATTITUDE — SXTN STUDIO —</span>
-    `;
-    fadeOut(soft); fadeIn(edgy);
-  }else{
-    marquee.innerHTML = `
-      <span>TYPOGRAPHY — VISUAL IDENTITY — EXPERIMENTAL DESIGN — SXTN STUDIO —</span>
-      <span>TYPOGRAPHY — VISUAL IDENTITY — EXPERIMENTAL DESIGN — SXTN STUDIO —</span>
-    `;
-    fadeOut(edgy); fadeIn(soft);
-  }
-}
-
-/* ================= WORK ZOOM ================= */
-const lb=document.getElementById('lb');
-const lbImg=document.getElementById('lbImg');
-document.querySelectorAll('.works img').forEach(i=>{
-  i.onclick=()=>{lbImg.src=i.src;lb.classList.add('show')}
-});
-lb.onclick=()=>lb.classList.remove('show');
-
-/* ================= EASTER EGG LOGIC ================= */
-let click=0;
-const easter=document.getElementById('easter');
-
-logo.onclick=()=>{
-  click++;
-  if(click===6){
-    if(document.body.classList.contains('edgy')){
-      easter.textContent = "Design is not decoration. It’s attitude.";
-    }else{
-      easter.textContent = "Good design whispers before it speaks.";
+  <script>
+    function openPopup(src, title, meta) {
+      document.getElementById('popup-img').src = src;
+      document.getElementById('popup-title').textContent = title;
+      document.getElementById('popup-meta').textContent = meta;
+      document.getElementById('artwork-popup').classList.add('active');
+      document.body.style.overflow = 'hidden';
     }
-    easter.classList.add('show');
-    setTimeout(()=>easter.classList.remove('show'),4000);
-    click=0;
-  }
-};
+    function closePopup() {
+      document.getElementById('artwork-popup').classList.remove('active');
+      document.body.style.overflow = '';
+      setTimeout(() => { document.getElementById('popup-img').src = ''; }, 300);
+    }
 
-/* ================= FADE OUT ON LEAVE ================= */
-document.querySelectorAll('.contact a')
-.forEach(a=>a.onclick=()=>{fadeOut(soft);fadeOut(edgy)});
-window.addEventListener('beforeunload',()=>{fadeOut(soft);fadeOut(edgy)});
-</script>
-
+    document.getElementById('nav') && window.addEventListener('scroll', () => {
+      document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+    document.getElementById('yr').textContent = '© ' + new Date().getFullYear() + ' Sxtn Studio™ — Jakarta, Indonesia';
+  </script>
 </body>
+
 </html>
