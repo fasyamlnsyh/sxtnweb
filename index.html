@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SXTN Studio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<style>
+/* ================= THEME ================= */
+:root{
+  --bg1:#e8f5f2;
+  --bg2:#eef3ff;
+  --bg3:#ffffff;
+  --text:#0e1b1a;
+  --muted:#5f6f73;
+  --accent:#1fb6a6;
+  --marquee-speed:18s;
+}
+body.edgy{
+  --bg1:#020617;
+  --bg2:#0f172a;
+  --bg3:#000000;
+  --text:#e5e7eb;
+  --muted:#9ca3af;
+  --accent:#22d3ee;
+  --marquee-speed:10s;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,sans-serif;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+  color:var(--text);
+  transition:.8s;
+  overflow-x:hidden;
+}
+
+/* ================= BACKGROUND ANIMATION ================= */
+.spray{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+}
+.spray::before{
+  content:"";
+  position:absolute;
+  width:520px;
+  height:520px;
+  background:radial-gradient(circle,var(--accent),transparent 60%);
+  filter:blur(60px);
+  opacity:.18;
+  animation:sprayMove 22s alternate infinite ease-in-out;
+}
+@keyframes sprayMove{
+  from{transform:translate(-20%,-10%)}
+  to{transform:translate(30%,30%)}
+}
+
+/* ================= MODE BUTTON ================= */
+.mode-btn{
+  position:fixed;
+  top:20px;
+  right:20px;
+  padding:10px 14px;
+  border-radius:30px;
+  backdrop-filter:blur(10px);
+  cursor:pointer;
+  z-index:99;
+}
+
+/* ================= HERO ================= */
+.hero{
+  min-height:100vh;
+  padding:90px 40px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  position:relative;
+  z-index:1;
+}
+.hero h1{
+  font-size:clamp(3.2rem,8vw,6.2rem);
+  letter-spacing:7px;
+  cursor:pointer;
+}
+.hero p{
+  max-width:520px;
+  color:var(--muted);
+}
+
+/* ================= MARQUEE ================= */
+.marquee{
+  position:relative;
+  z-index:1;
+  overflow:hidden;
+  white-space:nowrap;
+  border-top:1px solid #cfe3df;
+  border-bottom:1px solid #cfe3df;
+  background:rgba(255,255,255,.7);
+  backdrop-filter:blur(6px);
+}
+body.edgy .marquee{
+  background:#000;
+  border-color:#222;
+}
+.marquee-track{
+  display:inline-block;
+  animation:scroll var(--marquee-speed) linear infinite;
+}
+.marquee:hover .marquee-track{
+  animation-play-state:paused; /* easter egg kecil */
+}
+.marquee span{
+  padding:18px 40px;
+  letter-spacing:4px;
+  font-size:.95rem;
+}
+@keyframes scroll{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+
+/* ================= SECTION ================= */
+section{
+  padding:110px 40px;
+  max-width:1200px;
+  margin:auto;
+  position:relative;
+  z-index:1;
+}
+
+/* ================= WORKS ================= */
+.works{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:26px;
+}
+.works img{
+  width:100%;
+  border-radius:18px;
+  cursor:pointer;
+  transition:.6s cubic-bezier(.19,1,.22,1);
+}
+.works img:hover{transform:scale(1.04)}
+
+/* ================= LIGHTBOX ================= */
+.lightbox{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.9);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+.lightbox img{
+  max-width:92%;
+  max-height:92%;
+  border-radius:16px;
+}
+.lightbox.show{display:flex}
+
+/* ================= CONTACT ================= */
+.contact{text-align:center}
+.contact a{
+  display:block;
+  margin-top:16px;
+  font-size:1.2rem;
+  color:var(--accent);
+  text-decoration:none;
+}
+
+/* ================= EASTER EGG ================= */
+.easter{
+  position:fixed;
+  bottom:30px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#000;
+  color:#fff;
+  padding:14px 22px;
+  border-radius:30px;
+  font-size:.9rem;
+  letter-spacing:.5px;
+  opacity:0;
+  pointer-events:none;
+  transition:.6s ease;
+  z-index:1000;
+}
+.easter.show{opacity:1}
+
+@media(max-width:600px){
+  .hero{padding:70px 24px}
+  section{padding:90px 24px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="spray"></div>
+
+<div class="mode-btn" onclick="toggleMode()">🎨 MODE</div>
+
+<!-- AUDIO -->
+<audio id="soft" src="beat-soft.mp3" loop></audio>
+<audio id="edgy" src="beat-edgy.mp3" loop></audio>
+
+<!-- HERO -->
+<div class="hero">
+  <h1 id="logo">SXTN STUDIO</h1>
+  <p>Experimental graphic design studio exploring typography, identity, and visual attitude.</p>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="marquee-track" id="marqueeText">
+    <span>TYPOGRAPHY — VISUAL IDENTITY — EXPERIMENTAL DESIGN — SXTN STUDIO —</span>
+    <span>TYPOGRAPHY — VISUAL IDENTITY — EXPERIMENTAL DESIGN — SXTN STUDIO —</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section>
+  <h2>About</h2>
+  <p style="max-width:650px;color:var(--muted);line-height:1.7;">
+    SXTN Studio focuses on expressive visual systems, blending structure with intuition and emotional clarity.
+  </p>
+</section>
+
+<!-- WORKS -->
+<section>
+  <h2>Selected Works</h2>
+  <div class="works">
+    <img src="IMG_5207.JPG">
+    <img src="IMG_5208.JPG">
+    <img src="IMG_5209.JPG">
+    <img src="IMG_5210.JPG">
+    <img src="IMG_5211.JPG">
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact">
+  <h2>Contact</h2>
+  <a href="https://www.instagram.com/sxtnstudio_" target="_blank">DM on Instagram</a>
+  <a href="mailto:sxtndesign16@gmail.com">sxtndesign16@gmail.com</a>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lb"><img id="lbImg"></div>
+
+<!-- EASTER -->
+<div class="easter" id="easter"></div>
+
+<script>
+/* ================= AUDIO ================= */
+const soft=document.getElementById('soft');
+const edgy=document.getElementById('edgy');
+soft.volume=0;edgy.volume=0;
+let started=false;
+
+function fadeIn(a){
+  a.play();
+  let i=setInterval(()=>{if(a.volume<0.7)a.volume+=0.03;else clearInterval(i)},120);
+}
+function fadeOut(a){
+  let i=setInterval(()=>{
+    if(a.volume>0.03)a.volume-=0.03;
+    else{a.pause();a.volume=0;clearInterval(i)}
+  },120);
+}
+
+function startAudio(){
+  if(started)return;
+  fadeIn(soft);
+  started=true;
+}
+window.addEventListener('click',startAudio,{once:true});
+window.addEventListener('scroll',startAudio,{once:true});
+
+/* ================= MODE SWITCH ================= */
+const marquee=document.getElementById('marqueeText');
+
+function toggleMode(){
+  document.body.classList.toggle('edgy');
+  if(document.body.classList.contains('edgy')){
+    marquee.innerHTML = `
+      <span>STREET ENERGY — RAW TYPE — VISUAL ATTITUDE — SXTN STUDIO —</span>
+      <span>STREET ENERGY — RAW TYPE — VISUAL ATTITUDE — SXTN STUDIO —</span>
+    `;
+    fadeOut(soft); fadeIn(edgy);
+  }else{
+    marquee.innerHTML = `
+      <span>TYPOGRAPHY — VISUAL IDENTITY — EXPERIMENTAL DESIGN — SXTN STUDIO —</span>
+      <span>TYPOGRAPHY — VISUAL IDENTITY — EXPERIMENTAL DESIGN — SXTN STUDIO —</span>
+    `;
+    fadeOut(edgy); fadeIn(soft);
+  }
+}
+
+/* ================= WORK ZOOM ================= */
+const lb=document.getElementById('lb');
+const lbImg=document.getElementById('lbImg');
+document.querySelectorAll('.works img').forEach(i=>{
+  i.onclick=()=>{lbImg.src=i.src;lb.classList.add('show')}
+});
+lb.onclick=()=>lb.classList.remove('show');
+
+/* ================= EASTER EGG LOGIC ================= */
+let click=0;
+const easter=document.getElementById('easter');
+
+logo.onclick=()=>{
+  click++;
+  if(click===6){
+    if(document.body.classList.contains('edgy')){
+      easter.textContent = "Design is not decoration. It’s attitude.";
+    }else{
+      easter.textContent = "Good design whispers before it speaks.";
+    }
+    easter.classList.add('show');
+    setTimeout(()=>easter.classList.remove('show'),4000);
+    click=0;
+  }
+};
+
+/* ================= FADE OUT ON LEAVE ================= */
+document.querySelectorAll('.contact a')
+.forEach(a=>a.onclick=()=>{fadeOut(soft);fadeOut(edgy)});
+window.addEventListener('beforeunload',()=>{fadeOut(soft);fadeOut(edgy)});
+</script>
+
+</body>
+</html>
